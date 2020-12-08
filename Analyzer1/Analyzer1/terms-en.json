@@ -1,0 +1,22 @@
+[
+  
+  {
+    "TermID": "12345",
+    "Severity": "2",
+    "Term": "arse",
+    "TermClass": "Profanity",
+    "Context": "In all contexts.",
+    "ActionRecommendation": "Remove",
+    "Why": "There is zero tolerance for profanity including in code and code comments."
+  },
+  {
+    "TermID": "67890",
+    "Severity": "2",
+    "Term": "arsehole",
+    "TermTranslation": "English Translation",
+    "TermClass": "Profanity",
+    "Context": "In all contexts.",
+    "ActionRecommendation": "Remove",
+    "Why": "There is zero tolerance for profanity including in code and code comments."
+  }
+]
