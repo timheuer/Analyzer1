@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -37,7 +38,7 @@ namespace Analyzer1
             
             // TODO: load the dictionary in memory
             // THIS FAILS TO LOAD
-            terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllText("terms-en.json"));
+            // terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllText("terms-en.json"));
 
             // DEBUG: create the List<Term> locally
             //terms = new List<Term>
@@ -64,6 +65,12 @@ namespace Analyzer1
         {
             try
             {
+                ImmutableArray<AdditionalText> additionalFiles = context.Options.AdditionalFiles;
+                AdditionalText termsFile = additionalFiles.FirstOrDefault(file => Path.GetFileName(file.Path).Equals("terms-en.json"));
+                SourceText jsonText = termsFile.GetText(context.CancellationToken);
+
+                terms = JsonSerializer.Deserialize<List<Term>>(jsonText.ToString());
+
                 var symbol = context.Symbol;
 
                 foreach (var term in terms)
