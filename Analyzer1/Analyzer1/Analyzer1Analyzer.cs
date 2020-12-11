@@ -35,17 +35,11 @@ namespace Analyzer1
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
-            
-            // TODO: load the dictionary in memory
-            // THIS FAILS TO LOAD
-            // terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllText("terms-en.json"));
 
-            // DEBUG: create the List<Term> locally
-            //terms = new List<Term>
-            //{
-            //    new Term() { Class = "Accessibility", Context = "Shouldn't use it", Id = "1234", Name = "Weird", Severity = "2", Recommendation = "Reconsider renaming", Why = "Weird is in the eye of the beholder" },
-            //    new Term() { Class = "Accessibility", Context = "Bad word", Id = "5678", Name = "Poop", Severity = "1", Recommendation = "Remove", Why = "Because it's bad" }
-            //};
+            if (terms is null)
+            {
+                terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllBytes("terms-en.json")); 
+            }
 
             // Analyze symbols
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType, SymbolKind.Method, SymbolKind.Property, SymbolKind.Field,
