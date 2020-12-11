@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -38,7 +38,8 @@ namespace Analyzer1
 
             if (terms is null)
             {
-                terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllBytes("terms-en.json")); 
+                var currentDirecory = GetFolderTypeWasLoadedFrom<Analyzer1Analyzer>();
+                terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllBytes(Path.Combine(currentDirecory, "terms-en.json")));
             }
 
             // Analyze symbols
@@ -46,6 +47,9 @@ namespace Analyzer1
                     SymbolKind.Event, SymbolKind.Namespace, SymbolKind.Parameter);
 
         }
+
+        private static string GetFolderTypeWasLoadedFrom<T>()
+            => new FileInfo(new Uri(typeof(T).Assembly.CodeBase).LocalPath).Directory.FullName;
 
         private static bool ContainsUnsafeWords(string symbol, string term)
         {
