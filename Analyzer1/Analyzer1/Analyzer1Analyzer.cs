@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -59,12 +59,6 @@ namespace Analyzer1
         {
             try
             {
-                ImmutableArray<AdditionalText> additionalFiles = context.Options.AdditionalFiles;
-                AdditionalText termsFile = additionalFiles.FirstOrDefault(file => Path.GetFileName(file.Path).Equals("terms-en.json"));
-                SourceText jsonText = termsFile.GetText(context.CancellationToken);
-
-                terms = JsonSerializer.Deserialize<List<Term>>(jsonText.ToString());
-
                 var symbol = context.Symbol;
 
                 foreach (var term in terms)
