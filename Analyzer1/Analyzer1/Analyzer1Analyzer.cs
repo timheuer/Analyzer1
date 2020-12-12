@@ -38,7 +38,8 @@ namespace Analyzer1
 
             if (terms is null)
             {
-                terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllBytes("terms-en.json")); 
+                var currentDirecory = GetFolderTypeWasLoadedFrom<Analyzer1Analyzer>();
+                terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllBytes(Path.Combine(currentDirecory, "terms-en.json")));
             }
 
             // Analyze symbols
@@ -46,6 +47,9 @@ namespace Analyzer1
                     SymbolKind.Event, SymbolKind.Namespace, SymbolKind.Parameter);
 
         }
+
+        private static string GetFolderTypeWasLoadedFrom<T>()
+            => new FileInfo(new Uri(typeof(T).Assembly.CodeBase).LocalPath).Directory.FullName;
 
         private static bool ContainsUnsafeWords(string symbol, string term)
         {
@@ -59,12 +63,6 @@ namespace Analyzer1
         {
             try
             {
-                ImmutableArray<AdditionalText> additionalFiles = context.Options.AdditionalFiles;
-                AdditionalText termsFile = additionalFiles.FirstOrDefault(file => Path.GetFileName(file.Path).Equals("terms-en.json"));
-                SourceText jsonText = termsFile.GetText(context.CancellationToken);
-
-                terms = JsonSerializer.Deserialize<List<Term>>(jsonText.ToString());
-
                 var symbol = context.Symbol;
 
                 foreach (var term in terms)
